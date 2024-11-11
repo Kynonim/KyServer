@@ -4,6 +4,7 @@
 */
 
 import "dotenv/config"
+import { BuatPostingan, BacaPostingan } from "./src/secret/imphnen"
 import { SigninAkun, SignupAkun } from "./src/secret/login"
 
 const print = console.log
@@ -20,6 +21,14 @@ const server = Bun.serve({
         if (pathname === "/api/signin" && req.method === "POST") {
             const { status, message } = await SigninAkun(await req.json())
             return new Response(JSON.stringify({ status, message }), { status: 200 })
+        }
+        if (pathname === "/api/create" && req.method === "POST") {
+            const { status, message } = await BuatPostingan(await req.json())
+            return new Response(JSON.stringify({ status, message }), { status: 200 })
+        }
+        if (pathname === "/api/read" && req.method === "POST") {
+            const { status, message, data } = await BacaPostingan(await req.json())
+            return new Response(JSON.stringify({ status, message, data }), { status: 200 })
         }
         return new Response("Nothing", { status: 404 })
     }
