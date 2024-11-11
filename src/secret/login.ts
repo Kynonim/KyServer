@@ -81,3 +81,69 @@ export async function SignupAkun(akun: any): Promise<{ status: boolean; message:
         return { "status": true, "message": "Akun berhasil dibuat" }
     }
 }
+
+/**
+ * baca data pengguna
+ * jika email cocok
+ * @param data
+ * @returns boolean/object(string)
+ */
+
+export async function BacaDataPengguna(data: any): Promise<{ status: boolean; message: string; data: any }> {
+    if (!data.email) {
+        return { status: false, message: "Data tidak lengkap", data: null }
+    } else {
+        const database = await BacaDataDariDatabase()
+        if (!database) {
+            return { status: false, message: "Database tidak tersedia", data: null }
+        }
+        const user = database.rikyxdz.find((user: any) => user.email === data.email)
+        if (!user) {
+            return { status: false, message: "Email tidak ditemukan", data: null }
+        } else {
+            return { status: true, message: "Berhasil membaca postingan", data: user }
+        }
+    }
+}
+
+/**
+ * ubah data pengguna
+ * jika email cocok
+ * @param data 
+ * @returns boolean/object(string)
+ */
+
+export async function UbahDataPengguna(data: any): Promise<{ status: boolean; message: string; data: any }> {
+    if (!data.email) {
+        return { status: false, message: "Data tidak lengkap", data: null }
+    } else {
+        let database = await BacaDataDariDatabase()
+        database = Array.isArray(database) ? database : [database]
+        if (!database) {
+            return { status: false, message: "Database tidak tersedia", data: null }
+        }
+        const user = database.rikyxdz.find((user: any) => user.email === data.email)
+        if (!user) {
+            return { status: false, message: "Email tidak ditemukan", data: null }
+        } else {
+            user.nama = data.nama
+            user.email = data.email
+            user.sandi = data.sandi
+            await SimpanDataKeDatabase(database)
+            return { status: true, message: "Berhasil membaca postingan", data: user }
+        }
+    }
+}
+
+/**
+ * baca semua pengguna
+ * @returns boolean/object(string)
+ */
+
+export async function BacaSemuaPengguna(): Promise<{ status: boolean; message: string; data: any }> {
+    const database = await BacaDataDariDatabase()
+    if (!database) {
+        return { status: false, message: "Database tidak tersedia", data: null }
+    }
+    return { status: true, message: "Berhasil membaca postingan", data: database }
+}
